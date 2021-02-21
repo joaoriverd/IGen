@@ -29,10 +29,18 @@ The compilation may take a while.
 To build IGen run the following:
  - `cd scripts`
  - `python3 build_igen.py`
-   
+
 **Note**: Check the appendix below for common errors when building IGen.
 
 ### Using IGen
+
+The script `<igen_path>/bin/igen.py` can be used to compile stand-alone
+files. For example:
+
+ - `cd <igen_path>/bin`
+ - `python igen.py test.c`
+
+This will compile `test.c` and generate `igen_test.c`
 
 ### Appendix
 
