@@ -22,8 +22,8 @@
 .DS_store
 
 # Nested build directory
-/build*
-/install
+/build*/
+/install/
 
 #==============================================================================#
 # Explicit files to ignore (only matches one).
