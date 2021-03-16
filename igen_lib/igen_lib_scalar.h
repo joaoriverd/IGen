@@ -168,59 +168,59 @@ static f64_I _ia_mul_f64_v2(f64_I x, f64_I y) {
     f64_I r;
     static const f64_I NaN_I = { NAN, NAN };
 
-    if (x.lo <= 0) {                     // x >= 0
-        if (y.lo <= 0.0) {                   // y >= 0
+    if (x.lo <= 0) {                  // x >= 0
+        if (y.lo <= 0.0) {            // y >= 0
             r.lo = -x.lo * y.lo;      // r.lo = x.lo *< y.lo
-            r.up =  x.up * y.up;        // r.up = x.up *> y.up
+            r.up =  x.up * y.up;      // r.up = x.up *> y.up
         }
-        else if (y.up <=0.0) {               // y <= 0
+        else if (y.up <=0.0) {        // y <= 0
             r.lo =  x.up * y.lo;      // r.lo = x.up *< y.lo
-            r.up = -x.lo * y.up;        // r.up = x.lo *> y.up
+            r.up = -x.lo * y.up;      // r.up = x.lo *> y.up
         }
-        else {                                // 0 in y
+        else {                        // 0 in y
             /* Check for NaN */
             if (isnan(x.lo)) {
                 return NaN_I;
             }
 
-            r.lo = x.up * y.lo;      // r.lo = x.up *< y.lo
-            r.up = x.up * y.up;        // r.up = x.up *< y.up;
+            r.lo = x.up * y.lo;       // r.lo = x.up *< y.lo
+            r.up = x.up * y.up;       // r.up = x.up *< y.up;
         }
     }
-    else if (x.up <= 0.0) {              // x <= 0
-        if (y.lo <= 0.0) {                   // y >= 0
+    else if (x.up <= 0.0) {           // x <= 0
+        if (y.lo <= 0.0) {            // y >= 0
             r.lo =  x.lo * y.up;      // r.lo = x.lo *< y.up
-            r.up = -x.up * y.lo;        // r.up = x.up *> y.lo
+            r.up = -x.up * y.lo;      // r.up = x.up *> y.lo
         }
-        else if (y.up <=0.0) {               // y <= 0
+        else if (y.up <=0.0) {        // y <= 0
             r.lo = -x.up * y.up;      // r.lo = x.up *< y.up
-            r.up =  x.lo * y.lo;        // r.up = x.lo *> y.lo
+            r.up =  x.lo * y.lo;      // r.up = x.lo *> y.lo
         }
-        else {                                // 0 in y
+        else {                        // 0 in y
             /* Check for NaN */
             if (isnan(x.up)) {
                 return NaN_I;
             }
-            r.lo = x.lo * y.up;      // r.lo = x.lo *<= y.up
-            r.up = x.lo * y.lo;        // r.up = x.lo *> y.lo
+            r.lo = x.lo * y.up;       // r.lo = x.lo *<= y.up
+            r.up = x.lo * y.lo;       // r.up = x.lo *> y.lo
         }
     }
-    else {                                // 0 in x
-        if (y.lo <= 0.0) {                   // y >= 0
+    else {                            // 0 in x
+        if (y.lo <= 0.0) {            // y >= 0
             /* Check for NaN */
             if (isnan(y.lo)) {
                 return NaN_I;
             }
-            r.lo = x.lo * y.up;      // r.lo = x.lo *< y.up
-            r.up = x.up * y.up;        // r.up = x.up *> y.up
+            r.lo = x.lo * y.up;       // r.lo = x.lo *< y.up
+            r.up = x.up * y.up;       // r.up = x.up *> y.up
         }
-        else if (y.up <=0.0) {               // y <= 0
+        else if (y.up <=0.0) {        // y <= 0
             /* Check for NaN */
             if (isnan(y.up)) {
                 return NaN_I;
             }
-            r.lo = x.up * y.lo;      // r.lo = x.up *< y.lo
-            r.up = x.lo * y.lo;        // r.up = x.lo *> y.lo
+            r.lo = x.up * y.lo;       // r.lo = x.up *< y.lo
+            r.up = x.lo * y.lo;       // r.up = x.lo *> y.lo
         }
         else {
             double t1, t2;
