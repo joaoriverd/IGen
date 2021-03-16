@@ -304,7 +304,6 @@ static f64_I _ia_sin_f64(f64_I _op) {
     unsigned int q_up = trig_quadrant(x_up);
     double tmp1, tmp2;
 
-
     /* Block with different floating point environment */
     {
         #pragma STDC FENV_ACCESS ON
@@ -432,19 +431,166 @@ static f64_I _ia_sin_f64(f64_I _op) {
 
     }
 
-
     r->lo = -r->lo;
-
     return _r;
 }
 
 static f64_I _ia_cos_f64(f64_I _op) {
     u_f64i* op = (u_f64i*) &_op;
-    /* Temporary */
-    op->up = op->up + M_PI_2;
-    op->lo = op->lo - M_PI_2 + 0.000000001;
 
-    return _ia_sin_f64(op->v);
+    /* Check for NaNs */
+    if (isnan(op->up) || isnan(op->lo)) {
+        return NaN_I;
+    }
+
+    f64_I _r = {-1.0, 1.0};
+    u_f64i* r = (u_f64i*) &_r;
+    double length = op->up + op->lo;
+    if (length > PI_TIMES_2) {
+        f64_I ones = {1.0, 1.0};
+        return ones;
+    }
+
+    /* Determine the quadrant. */
+    double x_lo = -op->lo;
+    double x_up =  op->up;
+    unsigned int q_lo = trig_quadrant(x_lo);
+    unsigned int q_up = trig_quadrant(x_up);
+    double tmp1, tmp2;
+
+    /* Block with different floating point environment */
+    {
+        #pragma STDC FENV_ACCESS ON
+        fesetround(FE_TONEAREST);
+
+        /* Shift quadrants just to keep the same structure as in sine */
+        q_lo = (q_lo + 1) % 4;
+        q_up = (q_up + 1) % 4;
+        switch (q_lo) {
+            case 0:
+                switch (q_up) {
+                    case 0:
+                        if (length > M_PI) {
+                            r->lo = -1.0;
+                            r->up =  1.0;
+                        }
+                        else {
+                            r->lo = cos_rd(x_lo);
+                            r->up = cos_ru(x_up);
+                        }
+                        break;
+                    case 1:
+                        tmp1 = cos_rd(x_lo);
+                        tmp2 = cos_rd(x_up);
+                        r->lo = tmp1 < tmp2 ? tmp1 : tmp2;
+                        r->up = 1.0;
+                        break;
+                    case 2:
+                        r->lo = cos_rd(x_up);
+                        r->up = 1.0;
+                        break;
+                    case 3:
+                        r->lo = -1.0;
+                        r->up =  1.0;
+                        break;
+                    default: break;
+                }
+                break;
+            case 1:
+                switch (q_up) {
+                    case 0:
+                        tmp1 = cos_ru(x_lo);
+                        tmp2 = cos_ru(x_up);
+                        r->lo = -1.0;
+                        r->up = tmp1 > tmp2 ? tmp1 : tmp2;
+                        break;
+                    case 1:
+                        if (length > M_PI) {
+                            r->lo = -1.0;
+                            r->up =  1.0;
+                        }
+                        else {
+                            r->lo = cos_rd(x_up);
+                            r->up = cos_ru(x_lo);
+                        }
+                        break;
+                    case 2:
+                        r->lo = cos_rd(x_up);
+                        r->up = cos_ru(x_lo);
+                        break;
+                    case 3:
+                        r->lo = -1.0;
+                        r->up = cos_ru(x_lo);
+                        break;
+                    default: break;
+                }
+                break;
+            case 2:
+                switch (q_up) {
+                    case 0:
+                        r->lo = -1.0;
+                        r->up = cos_ru(x_up);
+                        break;
+                    case 1:
+                        r->lo = -1.0;
+                        r->up =  1.0;
+                        break;
+                    case 2:
+                        if (length > M_PI) {
+                            r->lo = -1.0;
+                            r->up =  1.0;
+                        }
+                        else {
+                            r->lo = cos_rd(x_up);
+                            r->up = cos_ru(x_lo);
+                        }
+                        break;
+                    case 3:
+                        tmp1 = cos_ru(x_lo);
+                        tmp2 = cos_ru(x_up);
+                        r->lo = -1.0;
+                        r->up = tmp1 > tmp2 ? tmp1 : tmp2;
+                        break;
+                    default: break;
+                }
+                break;
+            case 3:
+                switch (q_up) {
+                    case 0:
+                        r->lo = cos_rd(x_lo);
+                        r->up = cos_ru(x_up);
+                        break;
+                    case 1:
+                        r->lo = cos_rd(x_lo);
+                        r->up = 1.0;
+                        break;
+                    case 2:
+                        tmp1 = cos_rd(x_lo);
+                        tmp2 = cos_rd(x_up);
+                        r->lo = tmp1 < tmp2 ? tmp1 : tmp2;
+                        r->up = 1.0;
+                        break;
+                    case 3:
+                        if (length > M_PI) {
+                            r->lo = -1.0;
+                            r->up =  1.0;
+                        }
+                        else {
+                            r->lo = cos_rd(x_lo);
+                            r->up = cos_ru(x_up);
+                        }
+                        break;
+                    default: break;
+                }
+                break;
+            default: break;
+        }
+        fesetround(FE_UPWARD);
+
+    }
+
+    r->lo = -r->lo;
+    return _r;
 }
 
 static f64_I _ia_tan_f64(f64_I _op) {
@@ -516,7 +662,7 @@ static f64_I _ia_asin_f64(f64_I _op) {
 }
 
 static f64_I _ia_acos_f64(f64_I _op) {
-
+    fprintf(stderr, "Error: _ia_acos_f64 not supported yet.\n");
     return _op;
 }
 
