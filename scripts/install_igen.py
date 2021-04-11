@@ -25,7 +25,7 @@ def clean_and_build():
 def move_bin():
     # Move igen binary to bin folder
     shutil.copy(build_dir + "/igen", bin_dir + "/igen")
-    print("Binary moved to bin folder.")
+    print("IGen binary moved to bin folder.")
 
 if __name__ == "__main__":
     clean_and_build()
