@@ -6,6 +6,7 @@
 #include "igen_dd_types.h"
 #include "igen_logic.h"
 #include "igen_lib.h"
+#include "igen_dd_casts.h"
 
 #define SHIFT_POW 27  // ceil(53/2) for binary64.
 //#define USE_ROUND_TO_NEAREST

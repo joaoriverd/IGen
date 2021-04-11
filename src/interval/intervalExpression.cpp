@@ -47,39 +47,6 @@ const string& intervalExpression::getVar () {
     return this->intervalVar;
 }
 
-string getCastPostfixForType(const string& type) {
-    /* Integer types */
-    if (type == INT_T)   { return "i"; }
-    if (type == UINT_T)  { return "u"; }
-    if (type == LONG_T)  { return "l"; }
-    if (type == ULONG_T) { return "ul";}
-    if (type == LL_T)    { return "l"; }
-    if (type == ULL_T)   { return "ul";}
-
-    /* Floating point types */
-    if (type == DD_T)     { return "dd";}
-    if (type == DOUBLE_T) { return "d"; }
-    if (type == FLOAT_T)  { return "f"; }
-    if (type == HALF_T)   { return "h"; }
-
-    cerr << "Type not found (getCastPostfixForType)" << endl;
-    throw std::exception();
-}
-
-string getIntervalCastFunction(const string& origType, const string& resType) {
-
-    /* This function should only be called when doing a cast between interval types.
-     * If both, origin and resulting type, are integers, then throw an error. */
-    if (isTypeInteger(origType) && isTypeInteger(resType)) {
-        cerr << "Cast between integer types should not be translated (getIntervalCastFunction)" << endl;
-        throw std::exception();
-        return "";
-    }
-
-    string funcName = IA_CVT_FUN(getCastPostfixForType(origType), getCastPostfixForType(resType));
-    return funcName;
-}
-
 intervalExpression intervalExpression::_constructIntervalExpr(Expr *expr) {
 
     if (auto *bop = dyn_cast<BinaryOperator>(expr)) {
@@ -509,38 +476,25 @@ intervalExpression intervalExpression::_constructCastExpr(ImplicitCastExpr *imca
             /* Cast constant expression. Vector constants do not exist. Thus, excluding this case */
             castConstantExpr(resultType, iRes);
         }
-        else if (isTypeSupported(originalType)) {
-            /* Here there are two cases:
-             * 1) From float_I to double_I, or from double_I to float_I.
-             *    Simply cast implicitly each bound. For this, it is enough to remove
-             *    the interval part.
-             * 2) The resulting type is a vector type (e.g. _m256d). In this case, we have
-             *    to call the function to cast it. */
-            if (!isTypeIntervalVector(resultType)) {
-                if (!iRes.hasBounds()) {
-                    /* The expression does not have bounds (e.g. in multiplication).
-                     * Thus, first introduce temporal variables */
-                    genTempVar(iRes, intervalExpression::getInternalBuff());
-                }
-
-                iRes.intervalVar = "";
-            }
-            else {
-                /* Generate interval variable if needed */
-                genTempVar(iRes, intervalExpression::getInternalBuff());
-                iRes.intervalVar = _iaCastFunName(originalType, resultType) + "(" + iRes.intervalVar + ")";
-                iRes.loExpr = "";
-                iRes.upExpr = "";
-            }
-        }
         else {
-
-            /* Not supported types in interval notation are directly casted to
-             * its interval counterpart. E.g. from int to double_I */
-            iRes.intervalVar = getIntervalCastFunction(originalType, resultType) + "(" + iRes.intervalVar + ")";
+            /* Casts using vector types (e.g. _m256d) are possible... how? */
+            /* Generate interval variable if needed */
+            genTempVar(iRes, intervalExpression::getInternalBuff());
+            iRes.intervalVar = _iaCastFunName(originalType, resultType) + "(" + iRes.intervalVar + ")";
+            iRes.loExpr = "";
+            iRes.upExpr = "";
             iRes.isScalar = false;
-
         }
+    }
+    else if (isTypeSupported(originalType)) {
+        /* The origin type is interval but not the resulting type. This is not
+         * really supported but we still convert it to a function. */
+        cerr << "Warning: Cast from an interval to an scalar type." << endl;
+        genTempVar(iRes, intervalExpression::getInternalBuff());
+        iRes.intervalVar = _iaCastFunName(originalType, resultType) + "(" + iRes.intervalVar + ")";
+        iRes.loExpr = "";
+        iRes.upExpr = "";
+        iRes.isScalar = true;
     }
 
     iRes.typeStr = resultType;
@@ -559,41 +513,29 @@ intervalExpression intervalExpression::_constructCastExpr(CStyleCastExpr *ccast)
     }
 
     if (isTypeSupported(resultType)) {
-
         if (iRes.isConstantExpr()) {
             /* Cast constant expression */
             castConstantExpr(resultType, iRes);
         }
-        else if (isTypeSupported(originalType)) {
-
-            /* From interval float to double, or from double to float.
-             * Simply cast each bound. For this, we should remove
-             * the interval part. */
-            if (!iRes.hasBounds()) {
-                /* The expression does not have bounds (e.g. in multiplication).
-                 * Thus, first introduce temporal variables */
-                genTempVar(iRes, intervalExpression::getInternalBuff());
-            }
-
-            iRes.intervalVar = "";
-            iRes.loExpr  = "(" + resultType + ") " + iRes.loExpr;
-            iRes.upExpr  = "(" + resultType + ") " + iRes.upExpr;
-
-        }
         else {
-
-            /* Not supported types in interval notation are directly casted to
-             * its interval counterpart. */
-            iRes.intervalVar = getIntervalCastFunction(originalType, resultType) + "(" + iRes.intervalVar + ")";
+            /* Generate interval variable if needed */
+            genTempVar(iRes, intervalExpression::getInternalBuff());
+            iRes.intervalVar = _iaCastFunName(originalType, resultType) + "(" + iRes.intervalVar + ")";
+            iRes.loExpr = "";
+            iRes.upExpr = "";
+            iRes.isConstant = false;
             iRes.isScalar = false;
-
         }
     }
     else if (isTypeSupported(originalType)) {
         /* The origin type is interval bt not the resulting type. This is not
          * really supported but we still convert it to a function. */
         cerr << "Warning: Cast from an interval to an scalar type." << endl;
-        iRes.intervalVar = getIntervalCastFunction(originalType, resultType) + "(" + iRes.intervalVar + ")";
+        genTempVar(iRes, intervalExpression::getInternalBuff());
+        iRes.intervalVar = _iaCastFunName(originalType, resultType) + "(" + iRes.intervalVar + ")";
+        iRes.loExpr = "";
+        iRes.upExpr = "";
+        iRes.isConstant = false;
         iRes.isScalar = true;
     }
     else {

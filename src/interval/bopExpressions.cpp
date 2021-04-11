@@ -46,27 +46,6 @@ void bopAssign (intervalExpression& iLhs, intervalExpression& iRhs, intervalExpr
         iRes.intervalVar = iLhs.intervalVar + " = " + iRhs.intervalVar;
     }
 #endif
-
-    if (iLhs.isIntervalExpr() && iRhs.isScalarExpr()) {
-        /* This case can only happened when handling custom vector types, e.g. vec256d. The reason is
-         * that lhs can have type u64_I whereas rhs can have uint64. Thus, for this case, the rhs has to be
-         * duplicated, i.e. lhs.lo = rhs, lhs.up = rhs. */
-
-        /* It is a transformation from a non supported type to a custom integer interval,
-         * e.g. int to u32_I. Transform to interval paying attention to the sign
-         * of the lower bound */
-        intervalExpression iTemp = iRhs;
-        int signBit = iLhs.getType() == UINT32_T ? 31 : 63;
-
-        genTempVar(iTemp, intervalExpression::getInternalBuff());
-        iRhs.intervalVar = "";
-        iRhs.loExpr = TOOGLE_BIT_MACRO(iTemp.intervalVar, to_string(signBit));
-        iRhs.upExpr = iTemp.intervalVar;
-
-        iRes.intervalVar = "";
-        iRes.loExpr = iLhs.loExpr + " = " + iRhs.loExpr;
-        iRes.upExpr = iLhs.upExpr + " = " + iRhs.upExpr;
-    }
 }
 
 void bopMul (intervalExpression& iLhs, intervalExpression& iRhs, intervalExpression& iRes) {

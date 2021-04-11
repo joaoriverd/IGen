@@ -7,6 +7,7 @@
 #include "igen_dd_types_vec.h"
 #include "igen_logic.h"
 #include "igen_lib.h"
+#include "igen_dd_casts.h"
 
 typedef struct {
     __m256d _1;

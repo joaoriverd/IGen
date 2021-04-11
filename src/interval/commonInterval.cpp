@@ -21,6 +21,7 @@ static eTransformationMode transformationMode = NORMAL_MODE;
 /// function is detected. Same for reduction improvement.
 static bool flagIntervalMathUsed = false;
 static bool flagReductionImprovementUsed = false;
+static bool flagLongDoubleUsed = false;
 
 static const vector< pair <string, string> > supportedTypes {
         {DD_T     , DD_INTERVAL_T},
@@ -302,40 +303,7 @@ string _iaFunName(string op, string type) {
 /// Get corresponding igen function for casting
 ///
 string _iaCastFunName(string t_base, string t_dest) {
-
-    if (t_dest == HALF_T) {
-
-    }
-
-    if (t_dest == FLOAT_T) {
-    }
-
-    if (t_dest == DOUBLE_T) {
-    }
-
-    if (t_dest == M256D_T) {
-        if (t_base == FLOAT_T)    { return "_ia_cast_f32_to_m256d"; }
-        if (t_base == DOUBLE_T)   { return "_ia_cast_f64_to_m256d"; }
-    }
-
-    if (t_dest == DD_T || t_dest == DD2_T || t_dest == DD4_T || t_dest == DD8_T || t_dest == DD16_T) {
-        string castName;
-        if (t_base == FLOAT_T)    { castName = "_ia_cast_f32_to_dd"; }
-        if (t_base == DOUBLE_T)   { castName = "_ia_cast_f64_to_dd"; }
-        if (t_base == DD_T)       { castName = "_ia_cast_dd_to_dd";  }
-
-        string postfix;
-        if(t_dest == DD_T)   { postfix = "";   }
-        if(t_dest == DD2_T)  { postfix = "x2";  }
-        if(t_dest == DD4_T)  { postfix = "x4";  }
-        if(t_dest == DD8_T)  { postfix = "x8";  }
-        if(t_dest == DD16_T) { postfix = "x16"; }
-
-        return castName + postfix;
-    }
-
-    cerr << "Error: No interval cast function found from " << t_base << " to " << t_dest << " (_iaCastFunName)" << endl;
-    throw std::exception();
+    return "_ia_cast" + getPostfixForType(t_base) + "_to" + getPostfixForType(t_dest);
 }
 
 ///
@@ -498,7 +466,6 @@ bool isTypeIntervalVector(const string& type) {
     return res;
 }
 
-
 ///
 /// Only returns true if the type is integer bare type.
 ///
@@ -514,6 +481,13 @@ bool isTypeInteger(const string& type) {
 }
 
 ///
+/// Only returns true if the type is long double bare type.
+///
+bool isTypeLongDouble(const string& type) {
+    return type == DD_T;
+}
+
+///
 /// Returns true in case the type was transformed to its respective
 /// interval type.
 ///
@@ -522,6 +496,11 @@ bool transformToIntervalType (string& type) {
     /* Check first if type can be transformed */
     if (!isTypeTransformable(type)) {
         return false;
+    }
+
+    /* Check if the type to transform is (or contains) long double */
+    if (isTypeLongDouble(type)) {
+        flagLongDoubleUsed = true;
     }
 
     for ( const pair<string, string>& t : supportedTypes ) {
@@ -645,8 +624,19 @@ bool isIntervalMathUsed() {
     return flagIntervalMathUsed;
 }
 
+///
+/// Returns whether improvement for reductions is used.
+///
 bool isReductionImprovementUsed() {
     return flagReductionImprovementUsed;
+}
+
+///
+/// Returns whether long double is used in the code. This is helpful to include the correct
+/// header file for double-double.
+///
+bool isLongDoubleUsed() {
+    return flagLongDoubleUsed;
 }
 
 ///
@@ -656,6 +646,9 @@ void setIntervalMathUsed() {
     flagIntervalMathUsed = true;
 }
 
+///
+/// Set flag specifying that improvement for reductions is used.
+///
 void setReductionImprovementUsed() {
     flagReductionImprovementUsed = true;
 }
@@ -665,30 +658,38 @@ void setReductionImprovementUsed() {
 ///
 string getPostfixForType(const string& type) {
     /* Integer types */
-    if (type == INT_T)   { return "_i"; }
-    if (type == UINT_T)  { return "_u"; }
-    if (type == LONG_T)  { return "_l"; }
-    if (type == ULONG_T) { return "_ul";}
-    if (type == LL_T)    { return "_l"; }
-    if (type == ULL_T)   { return "_ul";}
+    if (type == INT_T)    { return "_int";  }
+    if (type == UINT_T)   { return "_uint"; }
+    if (type == LONG_T)   { return "_long"; }
+    if (type == ULONG_T)  { return "_ulong";}
+    if (type == LL_T)     { return "_long"; }
+    if (type == ULL_T)    { return "_ulong";}
 
     /* Floating point types */
-    if (type == DD_T)     { return "_dd";}
+    if (type == DD_T)     { return "_dd";  }
     if (type == DOUBLE_T) { return "_f64"; }
     if (type == FLOAT_T)  { return "_f32"; }
     if (type == HALF_T)   { return "_f16"; }
 
     /* Vector types */
-    // todo: support vector types
+    // todo: complete vector types
+    if (type == M256D_T)  { return "_m256d"; }
+    if (type == DD2_T)    { return "_dd2";   }
+    if (type == DD4_T)    { return "_dd4";   }
+    if (type == DD8_T)    { return "_dd8";   }
+    if (type == DD16_T)   { return "_dd16";  }
 
-    cerr << "Type not found (getPostfixForType)" << endl;
+    cerr << "Type not found (getPostfixForType): " << type << endl;
     throw std::exception();
 }
 
+///
+/// Get the necessary header files of IGen
+///
 string getIGenHeaderFiles() {
     string headers;
 
-    if (getTransformationMode() == PROMOTE_TO_DD_MODE) {
+    if (getTransformationMode() == PROMOTE_TO_DD_MODE || isLongDoubleUsed()) {
         headers  = getIntervalLib() == IAGEN    ? IAGEN_DD_INCLUDE_HEADER   : "";
         headers += isReductionImprovementUsed() ? IAGEN_DD_REDUCTION_HEADER : "";
         headers += (isIntervalMathUsed())       ? IAGEN_DD_MATH_HEADER      : "";

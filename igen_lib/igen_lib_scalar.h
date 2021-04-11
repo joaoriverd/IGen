@@ -4,6 +4,7 @@
 #include <float.h>
 #include "igen_types_scalar.h"
 #include "igen_logic.h"
+#include "igen_casts.h"
 
 #ifdef DEBUG_MODE
 #include "igen_debug.h"
@@ -509,52 +510,6 @@ static bool_I _ia_cmpge_f32(f32_I x, f32_I y){
     if (-y.lo >   x.up ) { return FALSE_I; }
     fprintf(stderr, "Error: Unknown state in _ia_cmpge_f32\n");
     return UNKNOWN_I;
-}
-
-///
-/// Cast operations
-///
-static f64_I _ia_cvt_i2d(int x) {
-    f64_I r;
-    r.lo = -x;
-    r.up =  x;
-    return r;
-}
-
-static f64_I _ia_cvt_l2d(long x) {
-    f64_I r;
-    r.lo = -x;
-    r.up =  x;
-    return r;
-}
-
-static f32_I _ia_cvt_i2f(int x) {
-    f32_I r;
-    r.lo = -x;
-    r.up =  x;
-    return r;
-}
-
-static f32_I _ia_cvt_l2f(long x) {
-    f32_I r;
-    r.lo = -x;
-    r.up =  x;
-    return r;
-}
-
-static f64_I _ia_cvt_u2d(unsigned int x) {
-    f64_I r;
-    r.lo = -((double)x);
-    r.up =  x;
-
-    return r;
-}
-
-static long _ia_cvt_d2l(f64_I x) {
-    /* This is not properly supported. What is the right way to handle
-     * casts from interval to scalar? */
-    fprintf(stderr, "Cast from interval to scalar. Upper bound returned.\n");
-    return (long) x.up;
 }
 
 ///

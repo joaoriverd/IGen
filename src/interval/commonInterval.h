@@ -101,9 +101,9 @@
 #define TOLERANCE_TYPE_SEPARATOR ':'
 
 /* IAGEN code definitions */
-#define IAGEN_INCLUDE_HEADER    "#include \"igen_lib.h\"" NL
-#define IAGEN_MATH_HEADER       "#include \"igen_math.h\"" NL
-#define IAGEN_REDUCTION_HEADER  "#include \"igen_reduction.h\"" NL
+#define IAGEN_INCLUDE_HEADER       "#include \"igen_lib.h\"" NL
+#define IAGEN_MATH_HEADER          "#include \"igen_math.h\"" NL
+#define IAGEN_REDUCTION_HEADER     "#include \"igen_reduction.h\"" NL
 #define IAGEN_DD_INCLUDE_HEADER    "#include \"igen_dd_lib.h\"" NL
 #define IAGEN_DD_MATH_HEADER       "#include \"igen_dd_math.h\"" NL
 #define IAGEN_DD_REDUCTION_HEADER  "#include \"igen_dd_reduction.h\"" NL
@@ -117,7 +117,6 @@
 #define OUT_PARAM_PREFIX "_out_"
 
 /* IA Functions */
-#define IA_CVT_FUN(t1, t2) ("_ia_cvt_" + t1 + "2" + t2)
 #define IA_CVT2TB_FUN       "_ia_cvt2tb"
 #define IA_TRUE             "_ia_true"
 #define IA_FALSE            "_ia_false"
@@ -188,6 +187,7 @@ bool isIntervalMathUsed();
 void setIntervalMathUsed();
 bool isReductionImprovementUsed();
 void setReductionImprovementUsed();
+bool isLongDoubleUsed();
 std::string getPostfixForType(const std::string& type);
 std::string getIGenHeaderFiles();
 

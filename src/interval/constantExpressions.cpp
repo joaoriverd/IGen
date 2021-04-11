@@ -176,14 +176,19 @@ void castConstantExpr(const string& resType, intervalExpression& iConst) {
 
         if ( iConst.isScalarExpr() ) {
             /* It is an integer constant */
-            flo.convertFromString(iConst.intervalVar, APFloat::rmTowardNegative);
             fup.convertFromString(iConst.intervalVar, APFloat::rmTowardPositive);
+            flo.convertFromString(iConst.intervalVar, APFloat::rmTowardNegative);
         }
         else {
-            /* It is an interval constant */
-            flo.convertFromString(iConst.getLowExpr(), APFloat::rmTowardNegative);
+            /* It is an interval constant. Round both towards positive because lower bound is negated */
             fup.convertFromString(iConst.getUpExpr() , APFloat::rmTowardPositive);
-            if (isLoNegated) { flo.changeSign(); }
+            if (isLoNegated) {
+                flo.convertFromString(iConst.getLowExpr(), APFloat::rmTowardPositive);
+                flo.changeSign();
+            }
+            else {
+                flo.convertFromString(iConst.getLowExpr(), APFloat::rmTowardNegative);
+            }
         }
 
         /* Update interval expression */

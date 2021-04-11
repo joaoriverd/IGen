@@ -7,19 +7,19 @@ static f64_I D1[512];
 void init_DFT256(f64_I a) {
   for (int i3 = 0; i3 <= 15; i3++) {
     for (int i10 = 0; i10 <= 7; i10++) {
-      f64_I _t1 = _ia_cvt_i2d((2 * (i3 * i10)));
+      f64_I _t1 = _ia_cast_int_to_f64((2 * (i3 * i10)));
       f64_I _t2 = _ia_set_f64(-256.0, 256.0);
       f64_I _t3 = _ia_div_f64(_t1, _t2);
       D1[((32 * i3) + (4 * i10))] = cospi(_t3);
-      f64_I _t4 = _ia_cvt_i2d((2 * (((2 * (i3 * i10)) + 1) / 2)));
+      f64_I _t4 = _ia_cast_int_to_f64((2 * (((2 * (i3 * i10)) + 1) / 2)));
       f64_I _t5 = _ia_set_f64(-256.0, 256.0);
       f64_I _t6 = _ia_div_f64(_t4, _t5);
       D1[(1 + (32 * i3) + (4 * i10))] = sinpi(_t6);
-      f64_I _t7 = _ia_cvt_i2d((2 * (i3 * (8 + i10))));
+      f64_I _t7 = _ia_cast_int_to_f64((2 * (i3 * (8 + i10))));
       f64_I _t8 = _ia_set_f64(-256.0, 256.0);
       f64_I _t9 = _ia_div_f64(_t7, _t8);
       D1[(2 + (32 * i3) + (4 * i10))] = cospi(_t9);
-      f64_I _t10 = _ia_cvt_i2d((2 * (((2 * (i3 * (8 + i10))) + 1) / 2)));
+      f64_I _t10 = _ia_cast_int_to_f64((2 * (((2 * (i3 * (8 + i10))) + 1) / 2)));
       f64_I _t11 = _ia_set_f64(-256.0, 256.0);
       f64_I _t12 = _ia_div_f64(_t10, _t11);
       D1[(3 + (32 * i3) + (4 * i10))] = sinpi(_t12);
