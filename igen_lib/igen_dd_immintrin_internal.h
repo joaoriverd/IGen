@@ -598,9 +598,9 @@ static dd_I _error_dd (dd_I a) {
 #define _cmp_eq  _ia_cmpeq_dd
 #define _cmp_neq _ia_cmpneq_dd
 #define _cmp_lt  _ia_cmplt_dd
-#define _cmp_leq _ia_cmpleq_dd
+#define _cmp_leq _ia_cmple_dd
 #define _cmp_gt  _ia_cmpgt_dd
-#define _cmp_geq _ia_cmpgeq_dd
+#define _cmp_geq _ia_cmple_dd
 
 #define SQRT_s               _error_dd
 #define SQRT_d               _ia_sqrt_dd

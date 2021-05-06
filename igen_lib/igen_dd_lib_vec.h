@@ -305,6 +305,9 @@ static dd_I _ia_cvt_i2dd(int x) {
     return _ia_set_dd(-x, 0, x, 0);
 }
 
+///
+/// Comparison on intervals
+///
 static bool_I _ia_cmpgt_dd(dd_I a, dd_I b) {
 
     /* Todo: Check if this is faster using purely intrinsics */
@@ -321,7 +324,7 @@ static bool_I _ia_cmplt_dd(dd_I a, dd_I b) {
     return _ia_cmpgt_dd(b, a);
 }
 
-static bool_I _ia_cmpgeq_dd(dd_I a, dd_I b) {
+static bool_I _ia_cmpge_dd(dd_I a, dd_I b) {
     u_ddi _a = { .v = a };
     u_ddi _b = { .v = b };
 
@@ -331,8 +334,8 @@ static bool_I _ia_cmpgeq_dd(dd_I a, dd_I b) {
     return UNKNOWN_I;
 }
 
-static bool_I _ia_cmpleq_dd(dd_I a, dd_I b) {
-    return _ia_cmpgeq_dd(b, a);
+static bool_I _ia_cmple_dd(dd_I a, dd_I b) {
+    return _ia_cmpge_dd(b, a);
 }
 
 static bool_I _ia_cmpneq_dd(dd_I a, dd_I b) {

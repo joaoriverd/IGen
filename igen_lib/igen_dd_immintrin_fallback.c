@@ -539,7 +539,7 @@ ddi_4 _igen_dd_fb_mm_cmple_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     vec128s dst;
 
-    unsigned int _t16 = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned int _t16 = (_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t16);
     dst.f[1] = a.f[1];
     dst.f[2] = a.f[2];
@@ -559,7 +559,7 @@ ddi_4 _igen_dd_fb_mm_cmple_ps(ddi_4 _a, ddi_4 _b) {
 
     for (j = 0; j <= 3; ++j) {
         i = j * 32;
-        unsigned int _t17 = (_ia_cmpleq_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
+        unsigned int _t17 = (_ia_cmple_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
         dst.i[i / 32] = _ia_create_mask(_t17);
     }
 
@@ -607,7 +607,7 @@ ddi_4 _igen_dd_fb_mm_cmpge_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     vec128s dst;
 
-    unsigned int _t16 = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned int _t16 = (_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t16);
     dst.f[1] = a.f[1];
     dst.f[2] = a.f[2];
@@ -627,7 +627,7 @@ ddi_4 _igen_dd_fb_mm_cmpge_ps(ddi_4 _a, ddi_4 _b) {
 
     for (j = 0; j <= 3; ++j) {
         i = j * 32;
-        unsigned int _t17 = (_ia_cmpgeq_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
+        unsigned int _t17 = (_ia_cmple_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
         dst.i[i / 32] = _ia_create_mask(_t17);
     }
 
@@ -709,7 +709,7 @@ ddi_4 _igen_dd_fb_mm_cmpnle_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     vec128s dst;
 
-    unsigned int _t16 = !(_ia_cmpleq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned int _t16 = !(_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t16);
     dst.f[1] = a.f[1];
     dst.f[2] = a.f[2];
@@ -729,7 +729,7 @@ ddi_4 _igen_dd_fb_mm_cmpnle_ps(ddi_4 _a, ddi_4 _b) {
 
     for (j = 0; j <= 3; ++j) {
         i = j * 32;
-        unsigned int _t17 = !(_ia_cmpleq_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
+        unsigned int _t17 = !(_ia_cmple_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
         dst.i[i / 32] = _ia_create_mask(_t17);
     }
 
@@ -777,7 +777,7 @@ ddi_4 _igen_dd_fb_mm_cmpnge_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     vec128s dst;
 
-    unsigned int _t16 = !(_ia_cmpgeq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned int _t16 = !(_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t16);
     dst.f[1] = a.f[1];
     dst.f[2] = a.f[2];
@@ -797,7 +797,7 @@ ddi_4 _igen_dd_fb_mm_cmpnge_ps(ddi_4 _a, ddi_4 _b) {
 
     for (j = 0; j <= 3; ++j) {
         i = j * 32;
-        unsigned int _t17 = !(_ia_cmpgeq_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
+        unsigned int _t17 = !(_ia_cmple_dd(a.f[i / 32], b.f[i / 32])) ? -1 : 0;
         dst.i[i / 32] = _ia_create_mask(_t17);
     }
 
@@ -908,7 +908,7 @@ int _igen_dd_fb_mm_comile_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -934,7 +934,7 @@ int _igen_dd_fb_mm_comige_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -986,7 +986,7 @@ int _igen_dd_fb_mm_ucomile_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -1012,7 +1012,7 @@ int _igen_dd_fb_mm_ucomige_ss(ddi_4 _a, ddi_4 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -1874,7 +1874,7 @@ ddi_2 _igen_dd_fb_mm_cmple_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     vec128d dst;
 
-    unsigned long _t41 = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned long _t41 = (_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t41);
     dst.f[1] = a.f[1];
     return dst.v;
@@ -1900,7 +1900,7 @@ ddi_2 _igen_dd_fb_mm_cmpge_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     vec128d dst;
 
-    unsigned long _t41 = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned long _t41 = (_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t41);
     dst.f[1] = a.f[1];
     return dst.v;
@@ -1965,7 +1965,7 @@ ddi_2 _igen_dd_fb_mm_cmpnle_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     vec128d dst;
 
-    unsigned long _t41 = !(_ia_cmpleq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned long _t41 = !(_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t41);
     dst.f[1] = a.f[1];
     return dst.v;
@@ -1991,7 +1991,7 @@ ddi_2 _igen_dd_fb_mm_cmpnge_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     vec128d dst;
 
-    unsigned long _t41 = !(_ia_cmpgeq_dd(a.f[0], b.f[0])) ? -1 : 0;
+    unsigned long _t41 = !(_ia_cmple_dd(a.f[0], b.f[0])) ? -1 : 0;
     dst.i[0] = _ia_create_mask(_t41);
     dst.f[1] = a.f[1];
     return dst.v;
@@ -2044,7 +2044,7 @@ ddi_2 _igen_dd_fb_mm_cmple_pd(ddi_2 _a, ddi_2 _b) {
 
     for (j = 0; j <= 1; ++j) {
         i = j * 64;
-        unsigned long _t53 = (_ia_cmpleq_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
+        unsigned long _t53 = (_ia_cmple_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
         dst.i[i / 64] = _ia_create_mask(_t53);
     }
 
@@ -2080,7 +2080,7 @@ ddi_2 _igen_dd_fb_mm_cmpge_pd(ddi_2 _a, ddi_2 _b) {
 
     for (j = 0; j <= 1; ++j) {
         i = j * 64;
-        unsigned long _t53 = (_ia_cmpgeq_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
+        unsigned long _t53 = (_ia_cmple_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
         dst.i[i / 64] = _ia_create_mask(_t53);
     }
 
@@ -2170,7 +2170,7 @@ ddi_2 _igen_dd_fb_mm_cmpnle_pd(ddi_2 _a, ddi_2 _b) {
 
     for (j = 0; j <= 1; ++j) {
         i = j * 64;
-        unsigned long _t53 = !(_ia_cmpleq_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
+        unsigned long _t53 = !(_ia_cmple_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
         dst.i[i / 64] = _ia_create_mask(_t53);
     }
 
@@ -2206,7 +2206,7 @@ ddi_2 _igen_dd_fb_mm_cmpnge_pd(ddi_2 _a, ddi_2 _b) {
 
     for (j = 0; j <= 1; ++j) {
         i = j * 64;
-        unsigned long _t53 = !(_ia_cmpgeq_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
+        unsigned long _t53 = !(_ia_cmple_dd(a.f[i / 64], b.f[i / 64])) ? -1 : 0;
         dst.i[i / 64] = _ia_create_mask(_t53);
     }
 
@@ -2246,7 +2246,7 @@ int _igen_dd_fb_mm_comile_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -2272,7 +2272,7 @@ int _igen_dd_fb_mm_comige_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -2324,7 +2324,7 @@ int _igen_dd_fb_mm_ucomile_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpleq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
@@ -2350,7 +2350,7 @@ int _igen_dd_fb_mm_ucomige_sd(ddi_2 _a, ddi_2 _b) {
     b.v = _b;
     int dst;
 
-    dst = (_ia_cmpgeq_dd(a.f[0], b.f[0])) ? 1 : 0;
+    dst = (_ia_cmple_dd(a.f[0], b.f[0])) ? 1 : 0;
     int _ret;
     _ret = dst;
     return _ret;
