@@ -69,74 +69,26 @@ static f64_I _ia_sub_f64(f64_I x, f64_I y) {
 
 static f32_I _ia_mul_f32(f32_I x, f32_I y) {
     f32_I  r;
-    if (x.lo > 0) {
-        if (x.up > 0) {
-            if (y.lo > 0) {
-                if (y.up > 0) {
-                    float t1, t2;
-                    t1 = x.lo * y.up;
-                    t2 = x.up * y.lo;
-                    r.lo = (t1 > t2) ? t1 : t2;
-                    t1 = x.lo * y.lo;
-                    t2 = x.up * y.up;
-                    r.up = (t1 > t2) ? t1 : t2;
-                } else {
-                    r.lo = x.up * y.lo;
-                    r.up = x.lo * y.lo;
-                }
-            } else {
-                if (y.up > 0) {
-                    r.lo = x.lo * y.up;
-                    r.up = x.up * y.up;
-                } else {
-                    r.lo = 0;
-                    r.up = 0;
-                }
-            }
-        } else {
-            if (y.lo > 0) {
-                if (y.up > 0) {
-                    r.lo = x.lo * y.up;
-                    r.up = x.lo * y.lo;
-                } else {
-                    r.lo = -x.up * y.up;
-                    r.up =  x.lo * y.lo;
-                }
-            } else {
-                if (y.up > 0) {
-                    r.lo =  x.lo * y.up;
-                    r.up = -x.up * y.lo;
-                } else {
-                    r.lo = 0;
-                    r.up = 0;
-                }
-            }
-        }
-    } else {
-        if (x.up > 0) {
-            if (y.lo > 0) {
-                if (y.up > 0) {
-                    r.lo = x.up * y.lo;
-                    r.up = x.up * y.up;
-                } else {
-                    r.lo =  x.up * y.lo;
-                    r.up = -x.lo * y.up;
-                }
-            } else {
-                if (y.up > 0) {
-                    r.lo = -x.lo * y.lo;
-                    r.up =  x.up * y.up;
-                } else {
-                    r.lo = 0;
-                    r.up = 0;
-                }
-            }
-        } else {
-            r.lo = 0;
-            r.up = 0;
-        }
-    }
 
+    float u1 =   x.up * y.up;
+    float u2 =  -x.up * y.lo;
+    float u3 =  -x.lo * y.up;
+    float u4 =   x.lo * y.lo;
+    float l1 =  -x.up * y.up;
+    float l2 =   x.up * y.lo;
+    float l3 =   x.lo * y.up;
+    float l4 =  -x.lo * y.lo;
+
+    float u12 = u1 > u2 ? u1 : u2;
+    float u34 = u3 > u4 ? u3 : u4;
+    float up  = u12 > u34 ? u12 : u34;
+
+    float l12 = l1 > l2 ? l1 : l2;
+    float l34 = l3 > l4 ? l3 : l4;
+    float lo  = l12 > l34 ? l12 : l34;
+
+    r.up = up;
+    r.lo = lo;
     return r;
 }
 
