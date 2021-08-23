@@ -18,7 +18,7 @@ def build():
 
     # Running CMake for IGen-vv and IGen-sv
     print('Generating build infrastructure for Clang:')
-    cmake_options = '-DLLVM_ENABLE_PROJECTS="clang;polly" ' + \
+    cmake_options = '-DLLVM_ENABLE_PROJECTS="clang;clang-tools-extra;polly" ' + \
                     '-DCMAKE_INSTALL_PREFIX=' + install_dir + ' ' + \
                     '-DCMAKE_BUILD_TYPE=' + build_type
 
