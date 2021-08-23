@@ -10,7 +10,6 @@
 #include "include_tests.h"
 #include "util.h"
 #include "write_csv.h"
-#include "yalaa_wrap.h"
 
 using namespace std;
 
@@ -53,10 +52,6 @@ enum eFunctions {
     DFT_f64i_sv,
     DFT_ddi_vv,
     DFT_ddi_sv,
-    DFT_f64i_boost,
-    DFT_f64i_gaol,
-    DFT_f64i_filib,
-    DFT_f64i_yalaa
 };
 
 //#define N (64*2)
@@ -106,48 +101,10 @@ void build(void* &a, eFunctions type, int size) {
             d[i] = _ia_set_dd(-r, 0, r, 0);
         }
     }
-    if (type == DFT_f64i_boost) {
-        a = static_cast<void *>(aligned_alloc(32, (size*2)*sizeof(f64i_bst)));
-        auto* d = static_cast<f64i_bst *>(a);
-        for (int i = 0; i < (size*2); ++i) {
-            double r = getRandNum(-10, 10);
-            d[i] = f64i_bst(r, r);
-        }
-    }
-    if (type == DFT_f64i_filib) {
-        a = static_cast<void *>(aligned_alloc(32, (size*2)*sizeof(f64i_fil)));
-        auto* d = static_cast<f64i_fil *>(a);
-        for (int i = 0; i < (size*2); ++i) {
-            double r = getRandNum(-10, 10);
-            d[i] = f64i_fil(-r, r);
-        }
-    }
-    if (type == DFT_f64i_gaol) {
-        a = static_cast<void *>(aligned_alloc(32, (size*2)*sizeof(f64i_gal)));
-        auto* d = static_cast<f64i_gal *>(a);
-        for (int i = 0; i < (size*2); ++i) {
-            double r = getRandNum(-10, 10);
-            d[i] = f64i_gal(-r, r);
-        }
-    }
-    if (type == DFT_f64i_yalaa) {
-//        a = static_cast<void *>(aligned_alloc(32, (size*2)*sizeof(yalaa_af0)));
-        a = new yalaa_af0 [size*2];
-        auto* d = static_cast<yalaa_af0 *>(a);
-        for (int i = 0; i < (size*2); ++i) {
-            double r = getRandNum(-10, 10);
-            d[i] = r;
-        }
-    }
 }
 
 void destroy(void* m, eFunctions type) {
-    if (type == DFT_f64i_yalaa) {
-        delete[] (yalaa_af0*) m;
-    }
-    else {
-        free(m);
-    }
+    free(m);
 }
 
 void register_functions() {
@@ -187,30 +144,6 @@ void register_functions() {
     add_function( DFT64_ddi ,  "DFT64_ddi" ,  1280, DFT_ddi_vv ,64 );
     add_function( DFT128_ddi,  "DFT128_ddi",  3008, DFT_ddi_vv ,128);
     add_function( DFT256_ddi,  "DFT256_ddi",  7168, DFT_ddi_vv ,256);
-
-    add_function( DFT16_boost ,  "DFT16_boost" ,  176 , DFT_f64i_boost, 16 );
-    add_function( DFT32_boost ,  "DFT32_boost" ,  544 , DFT_f64i_boost, 32 );
-    add_function( DFT64_boost ,  "DFT64_boost" ,  1280, DFT_f64i_boost, 64 );
-    add_function( DFT128_boost,  "DFT128_boost",  3008, DFT_f64i_boost, 128);
-    add_function( DFT256_boost,  "DFT256_boost",  7168, DFT_f64i_boost, 256);
-
-    add_function( DFT16_gaol ,  "DFT16_gaol ",  176 , DFT_f64i_gaol , 16 );
-    add_function( DFT32_gaol ,  "DFT32_gaol ",  544 , DFT_f64i_gaol , 32 );
-    add_function( DFT64_gaol ,  "DFT64_gaol ",  1280, DFT_f64i_gaol , 64 );
-    add_function( DFT128_gaol,  "DFT128_gaol",  3008, DFT_f64i_gaol , 128);
-    add_function( DFT256_gaol,  "DFT256_gaol",  7168, DFT_f64i_gaol , 256);
-
-    add_function( DFT16_filib ,  "DFT16_filib" ,  176 , DFT_f64i_filib, 16 );
-    add_function( DFT32_filib ,  "DFT32_filib" ,  544 , DFT_f64i_filib, 32 );
-    add_function( DFT64_filib ,  "DFT64_filib" ,  1280, DFT_f64i_filib, 64 );
-    add_function( DFT128_filib,  "DFT128_filib",  3008, DFT_f64i_filib, 128);
-    add_function( DFT256_filib,  "DFT256_filib",  7168, DFT_f64i_filib, 256);
-
-    //add_function( DFT16_yalaa ,  "DFT16_yalaa" ,  176 , DFT_f64i_yalaa, 16 );
-    //add_function( DFT32_yalaa ,  "DFT32_yalaa" ,  544 , DFT_f64i_yalaa, 32 );
-    //add_function( DFT64_yalaa ,  "DFT64_yalaa" ,  1280, DFT_f64i_yalaa, 64 );
-    //add_function( DFT128_yalaa,  "DFT128_yalaa",  3008, DFT_f64i_yalaa, 128);
-    //add_function( DFT256_yalaa,  "DFT256_yalaa",  7168, DFT_f64i_yalaa, 256);
 }
 
 void add_function(comp_func f, string name, int flops, eFunctions type, int size) {
@@ -298,24 +231,6 @@ void init_benchmarks() {
     init_DFT64(a_ddi);
     init_DFT128(a_ddi);
     init_DFT256(a_ddi);
-
-    init_DFT16_bst();
-    init_DFT32_bst();
-    init_DFT64_bst();
-    init_DFT128_bst();
-    init_DFT256_bst();
-
-    init_DFT16_fil();
-    init_DFT32_fil();
-    init_DFT64_fil();
-    init_DFT128_fil();
-    init_DFT256_fil();
-
-    init_DFT16_gal();
-    init_DFT32_gal();
-    init_DFT64_gal();
-    init_DFT128_gal();
-    init_DFT256_gal();
 
     init_AVX_DFT16(a);
     init_AVX_DFT32(a);

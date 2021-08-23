@@ -2,10 +2,6 @@
 
 #include "igen_lib.h"
 #include "igen_dd_lib.h"
-#include "boost_common.h"
-#include "filib_common.h"
-#include "gaol_common.h"
-#include "yalaa_wrap.h"
 
 void init_DFT16(double);
 void init_DFT32(double);
@@ -85,30 +81,6 @@ void DFT64 (dd_I   *Y, dd_I   *X);
 void DFT128(dd_I   *Y, dd_I   *X);
 void DFT256(dd_I   *Y, dd_I   *X);
 
-void DFT16 (f64i_bst *Y, f64i_bst *X);
-void DFT32 (f64i_bst *Y, f64i_bst *X);
-void DFT64 (f64i_bst *Y, f64i_bst *X);
-void DFT128(f64i_bst *Y, f64i_bst *X);
-void DFT256(f64i_bst *Y, f64i_bst *X);
-
-void DFT16 (f64i_fil *Y, f64i_fil *X);
-void DFT32 (f64i_fil *Y, f64i_fil *X);
-void DFT64 (f64i_fil *Y, f64i_fil *X);
-void DFT128(f64i_fil *Y, f64i_fil *X);
-void DFT256(f64i_fil *Y, f64i_fil *X);
-
-void DFT16 (f64i_gal *Y, f64i_gal *X);
-void DFT32 (f64i_gal *Y, f64i_gal *X);
-void DFT64 (f64i_gal *Y, f64i_gal *X);
-void DFT128(f64i_gal *Y, f64i_gal *X);
-void DFT256(f64i_gal *Y, f64i_gal *X);
-
-void DFT16 (yalaa_af0 *Y, yalaa_af0 *X);
-void DFT32 (yalaa_af0 *Y, yalaa_af0 *X);
-void DFT64 (yalaa_af0 *Y, yalaa_af0 *X);
-void DFT128(yalaa_af0 *Y, yalaa_af0 *X);
-void DFT256(yalaa_af0 *Y, yalaa_af0 *X);
-
 void AVX_DFT16 (double *Y, double *X);
 void AVX_DFT32 (double *Y, double *X);
 void AVX_DFT64 (double *Y, double *X);
@@ -145,30 +117,6 @@ static void DFT32_ddi       (void* Y, void* X) { DFT32 ((dd_I*)   Y, (dd_I*)   X
 static void DFT64_ddi       (void* Y, void* X) { DFT64 ((dd_I*)   Y, (dd_I*)   X); }
 static void DFT128_ddi      (void* Y, void* X) { DFT128((dd_I*)   Y, (dd_I*)   X); }
 static void DFT256_ddi      (void* Y, void* X) { DFT256((dd_I*)   Y, (dd_I*)   X); }
-
-static void DFT16_boost     (void* Y, void* X) { DFT16 ((f64i_bst *)  Y, (f64i_bst *) X); }
-static void DFT32_boost     (void* Y, void* X) { DFT32 ((f64i_bst *)  Y, (f64i_bst *) X); }
-static void DFT64_boost     (void* Y, void* X) { DFT64 ((f64i_bst *)  Y, (f64i_bst *) X); }
-static void DFT128_boost    (void* Y, void* X) { DFT128((f64i_bst *)  Y, (f64i_bst *) X); }
-static void DFT256_boost    (void* Y, void* X) { DFT256((f64i_bst *)  Y, (f64i_bst *) X); }
-
-static void DFT16_filib     (void* Y, void* X) { DFT16 ((f64i_fil *)  Y, (f64i_fil *) X); }
-static void DFT32_filib     (void* Y, void* X) { DFT32 ((f64i_fil *)  Y, (f64i_fil *) X); }
-static void DFT64_filib     (void* Y, void* X) { DFT64 ((f64i_fil *)  Y, (f64i_fil *) X); }
-static void DFT128_filib    (void* Y, void* X) { DFT128((f64i_fil *)  Y, (f64i_fil *) X); }
-static void DFT256_filib    (void* Y, void* X) { DFT256((f64i_fil *)  Y, (f64i_fil *) X); }
-
-static void DFT16_gaol      (void* Y, void* X) { DFT16 ((f64i_gal *)  Y, (f64i_gal *)   X); }
-static void DFT32_gaol      (void* Y, void* X) { DFT32 ((f64i_gal *)  Y, (f64i_gal *)   X); }
-static void DFT64_gaol      (void* Y, void* X) { DFT64 ((f64i_gal *)  Y, (f64i_gal *)   X); }
-static void DFT128_gaol     (void* Y, void* X) { DFT128((f64i_gal *)  Y, (f64i_gal *)   X); }
-static void DFT256_gaol     (void* Y, void* X) { DFT256((f64i_gal *)  Y, (f64i_gal *)   X); }
-
-static void DFT16_yalaa     (void* Y, void* X) { DFT16 ((yalaa_af0 *)  Y, (yalaa_af0 *) X); }
-static void DFT32_yalaa     (void* Y, void* X) { DFT32 ((yalaa_af0 *)  Y, (yalaa_af0 *) X); }
-static void DFT64_yalaa     (void* Y, void* X) { DFT64 ((yalaa_af0 *)  Y, (yalaa_af0 *) X); }
-static void DFT128_yalaa    (void* Y, void* X) { DFT128((yalaa_af0 *)  Y, (yalaa_af0 *) X); }
-static void DFT256_yalaa    (void* Y, void* X) { DFT256((yalaa_af0 *)  Y, (yalaa_af0 *) X); }
 
 static void AVX_DFT16_base  (void* Y, void* X) { AVX_DFT16 ((double*) Y, (double*) X); }
 static void AVX_DFT32_base  (void* Y, void* X) { AVX_DFT32 ((double*) Y, (double*) X); }

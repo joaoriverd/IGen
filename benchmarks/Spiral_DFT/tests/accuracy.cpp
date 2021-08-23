@@ -8,11 +8,7 @@
 #include "igen_dd_lib.h"
 #include "util.h"
 #include "random_range.h"
-#include "boost_common.h"
-#include "gaol_common.h"
-#include "filib_common.h"
 #include "write_csv.h"
-#include "yalaa_wrap.h"
 
 using namespace std;
 
@@ -35,35 +31,6 @@ void init_DFT64(f64_I);
 void init_DFT64(dd_I);
 void DFT64(f64_I  *, f64_I *);
 void DFT64(dd_I   *, dd_I  *);
-
-void init_DFT64_bst();
-void init_DFT64_fil();
-void init_DFT64_gal();
-void init_DFT64_yalaa();
-void DFT64(f64i_bst  *, f64i_bst  *);
-void DFT64(f64i_fil *, f64i_fil  *);
-void DFT64(f64i_gal *, f64i_gal  *);
-void DFT64(yalaa_af0 *, yalaa_af0  *);
-
-static long getCorrectBits(f64i_fil x) {
-    f64_I a = _ia_set_f64(-x.inf(), x.sup());
-    long cb =  getCorrectBits(a);
-    if (cb > 52) {
-        getCorrectBits(a);
-    }
-    return cb;
-}
-
-static long getCorrectBits(f64i_gal x) {
-    f64_I a = _ia_set_f64(-x.left(), x.right());
-    return getCorrectBits(a);
-}
-
-static long getCorrectBits(f64i_bst x) {
-    f64_I a = _ia_set_f64(-x.lower(), x.upper());
-    return getCorrectBits(a);
-}
-
 static long getCorrectBits(dd_I x_in) {
     mpfr_t xl, xu, delta;
     mpfr_init2(xl,    MPFR_HIGH_PRECISION);
@@ -90,12 +57,6 @@ static long getCorrectBits(dd_I x_in) {
     }
 
     return correctBits;
-}
-
-static long getCorrectBits(yalaa_af0 x_in) {
-    auto filib_var =  yalaa::to_iv(x_in.v);
-    f64_I a = _ia_set_f64(-filib_var.inf(), filib_var.sup());
-    return getCorrectBits(a);
 }
 
 static __attribute__((aligned(32))) f64_I  X_f64i[SIZE];
@@ -205,22 +166,6 @@ public:
     }
 };
 
-void set_epsilon(f64i_bst& f, double a) {
-    f.set(a, a + DBL_MIN);
-}
-
-void set_epsilon(f64i_gal& f, double a) {
-    f = f64i_gal(a, a + DBL_MIN);
-}
-
-void set_epsilon(f64i_fil& f, double a) {
-    f = f64i_fil(a, nextafter(a, INFINITY));
-}
-
-void set_epsilon(yalaa_af0& f, double a) {
-    f = yalaa_af0(a);
-}
-
 void set_epsilon(f64_I& f, double a) {
     f = _ia_set_epsilon_f64(a);
 }
@@ -285,61 +230,33 @@ void accuracy_DFT64() {
     initRandomSeed();
 
     /* Init DFT */
-    //init_DFT64_yalaa();
     fesetround(FE_UPWARD);
     f64_I a_f64i;
     dd_I  a_ddi;
     init_DFT64(a_f64i);
     init_DFT64(a_ddi);
-    init_DFT64_bst();
-    init_DFT64_gal();
-    fesetround(FE_DOWNWARD);
-    init_DFT64_fil();
 
     accuracy_stat dyn4_f64i ,  dyn20_f64i;
     accuracy_stat dyn4_ddi  ,   dyn20_ddi;
-    accuracy_stat dyn4_boost, dyn20_boost;
-    accuracy_stat dyn4_gaol ,  dyn20_gaol;
-    accuracy_stat dyn4_filib, dyn20_filib;
 
     /* Run test with dyn range of 4 and 20 bits */
     fesetround(FE_UPWARD);
     run_accuracy_test<f64_I>     ( 4 , dyn4_f64i );
     run_accuracy_test<dd_I>      ( 4 , dyn4_ddi  );
-    run_accuracy_test<f64i_bst>  ( 4 , dyn4_boost);
-    run_accuracy_test<f64i_gal>  ( 4 , dyn4_gaol );
-    fesetround(FE_DOWNWARD);
-    run_accuracy_test<f64i_fil>  ( 4 , dyn4_filib);
 
-    fesetround(FE_UPWARD);
     run_accuracy_test<f64_I>     ( 20, dyn20_f64i );
     run_accuracy_test<dd_I>      ( 20, dyn20_ddi  );
-    run_accuracy_test<f64i_bst>  ( 20, dyn20_boost);
-    run_accuracy_test<f64i_gal>  ( 20, dyn20_gaol );
-    fesetround(FE_DOWNWARD);
-    run_accuracy_test<f64i_fil>  ( 20, dyn20_filib);
     fesetround(FE_TONEAREST);
-
-    /* Try with affine arithmetic */
-    //accuracy_stat yalaa_stat;
-    //run_accuracy_test<yalaa_af0> ( 4, yalaa_stat);
 
     /* Print results */
     cout << "precision dyn range = 4:" << endl;
     dyn4_f64i .print_stats();
     dyn4_ddi  .print_stats();
-    dyn4_boost.print_stats();
-    dyn4_filib.print_stats();
-    dyn4_gaol. print_stats();
-    //yalaa_stat. print_stats();
     cout << endl;
 
     cout << "precision dyn range = 20:" << endl;
     dyn20_f64i .print_stats();
     dyn20_ddi  .print_stats();
-    dyn20_boost.print_stats();
-    dyn20_filib.print_stats();
-    dyn20_gaol. print_stats();
     cout << endl;
 
     /* Create csv files with the results of accuracy */
