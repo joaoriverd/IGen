@@ -1,0 +1,31 @@
+#ifndef ATL_INSTINFO_H
+   #define ATL_INSTINFO_H
+
+#define ATL_ARCH "Corei464AVXMAC"
+#define ATL_INSTFLAGS "-1 0 -a 1 -l 1"
+#define ATL_F2CDEFS "-DAdd_ -DF77_INTEGER=int -DStringSunStyle"
+#define ATL_ARCHDEFS "-DATL_OS_Linux -DATL_ARCH_Corei4 -DATL_CPUMHZ=1217 -DATL_AVXMAC -DATL_AVX -DATL_SSE3 -DATL_SSE2 -DATL_SSE1 -DATL_USE64BITS -DATL_GAS_x8664"
+#define ATL_DKCFLAGS "-fomit-frame-pointer -mfpmath=sse -O0 -mavx2 -mfma -g --coverage -m64"
+#define ATL_DKC "/usr/bin/c99-gcc"
+#define ATL_SKCFLAGS "-fomit-frame-pointer -mfpmath=sse -O0 -mavx2 -mfma -g --coverage -m64"
+#define ATL_SKC "/usr/bin/c99-gcc"
+#define ATL_DMCFLAGS "-fomit-frame-pointer -mfpmath=sse -O0 -fschedule-insns -mavx2 -mfma -g --coverage -m64"
+#define ATL_DMC "/usr/bin/c99-gcc"
+#define ATL_SMCFLAGS "-fomit-frame-pointer -mfpmath=sse -O0 -fschedule-insns -mavx2 -mfma -g --coverage -m64"
+#define ATL_SMC "/usr/bin/c99-gcc"
+#define ATL_ICCFLAGS "-DL2SIZE=33554432 -I/home/joao/Documents/libraries/linear_algebra/atlas3.10.3/ATLAS/build_debug/include -I/home/joao/Documents/libraries/linear_algebra/atlas3.10.3/ATLAS/build_debug/..//include -I/home/joao/Documents/libraries/linear_algebra/atlas3.10.3/ATLAS/build_debug/..//include/contrib -DAdd_ -DF77_INTEGER=int -DStringSunStyle -DATL_OS_Linux -DATL_ARCH_Corei4 -DATL_CPUMHZ=1217 -DATL_AVXMAC -DATL_AVX -DATL_SSE3 -DATL_SSE2 -DATL_SSE1 -DATL_USE64BITS -DATL_GAS_x8664 -g --coverage -m64 -DATL_NCPU=12 -fomi"
+#define ATL_ICC "/usr/bin/c99-gcc"
+#define ATL_F77FLAGS "-O -mavx2 -mfma -g --coverage -m64"
+#define ATL_F77 "/usr/bin/gfortran"
+#define ATL_DKCVERS "gcc (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_SKCVERS "gcc (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_DMCVERS "gcc (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_SMCVERS "gcc (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_ICCVERS "gcc (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_F77VERS "GNU Fortran (Ubuntu 7.5.0-3ubuntu1 18.04) 7.5.0"
+#define ATL_SYSINFO "Linux joao-ThinkPad-P52 4.15.0-99-generic #100-Ubuntu SMP Wed Apr 22 20:32:56 UTC 2020 x86_64 x86_64 x86_64 GNU/Linux"
+#define ATL_DATE    "Tue  5 May 18:22:11 CEST 2020"
+#define ATL_UNAM    "joao"
+#define ATL_VERS    "3.10.3"
+
+#endif
