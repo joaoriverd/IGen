@@ -28,7 +28,7 @@ The compilation may take a while.
 
 To build IGen run the following:
  - `cd scripts`
- - `python3 build_igen.py`
+ - `python3 install_igen.py`
 
 **Note**: Check the appendix below for common errors when building IGen.
 
