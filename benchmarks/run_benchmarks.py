@@ -6,14 +6,14 @@ import Spiral_DFT.run_igen      as DFT_IGen
 import Spiral_DFT.build_and_run as DFT_Bench
 import FFNN_mnist.run_igen      as FFNN_IGen
 import FFNN_mnist.build_and_run as FFNN_Bench
-import LGen_potrf.run_igen      as Potrf_IGen
-import LGen_potrf.build_and_run as Potrf_Bench
-import ATLAS_gemm.run_igen      as GEMM_IGen_vev
-import ATLAS_gemm.build_and_run as GEMM_Bench_vec
-import ATLAS_gemm_scalar.run_igen      as GEMM_IGen_scl
-import ATLAS_gemm_scalar.build_and_run as GEMM_Bench_scl
-import Reduction_mvm.run_igen          as Redu_IGen
-import Reduction_mvm.build_and_run     as Redu_Bench
+#import LGen_potrf.run_igen      as Potrf_IGen
+#import LGen_potrf.build_and_run as Potrf_Bench
+#import ATLAS_gemm.run_igen      as GEMM_IGen_vev
+#import ATLAS_gemm.build_and_run as GEMM_Bench_vec
+#import ATLAS_gemm_scalar.run_igen      as GEMM_IGen_scl
+#import ATLAS_gemm_scalar.build_and_run as GEMM_Bench_scl
+#import Reduction_mvm.run_igen          as Redu_IGen
+#import Reduction_mvm.build_and_run     as Redu_Bench
 
 output_dir_name = "results"
 

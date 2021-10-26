@@ -23,17 +23,17 @@ def build_and_run():
     os.system("./Spiral_DFT")
 
     # Running CMake of IGen-ss
-    print("Generating build infrastructure for IGen-ss:")
-    os.chdir(build_dir_ss)
-    os.system("cmake -DIGEN_VEC=NO ..")
+    #print("Generating build infrastructure for IGen-ss:")
+    #os.chdir(build_dir_ss)
+    #os.system("cmake -DIGEN_VEC=NO ..")
 
     # Build project
-    print("Building DFT for IGen-ss:")
-    os.system("make")
+    #print("Building DFT for IGen-ss:")
+    #os.system("make")
 
     # Start benchmark
-    print("Running DFT benchmark for IGen-ss:")
-    os.system("./Spiral_DFT")
+    #print("Running DFT benchmark for IGen-ss:")
+    #os.system("./Spiral_DFT")
 
     os.chdir(working_dir)
 

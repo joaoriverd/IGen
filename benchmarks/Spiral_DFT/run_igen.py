@@ -1,6 +1,7 @@
 import os
 
-igen_script = '/home/joao/Documents/repo/icompes/bin/igen.py'
+dirname = os.path.dirname(__file__)
+igen_script = os.path.join(dirname, '../../bin/igen.py')
 args = [
     # IGen-sv
     {'inp':'spiral_source/DFT16.cpp' ,     'out':'igen/f64i_DFT16.cpp' ,     'mode':'normal'},
