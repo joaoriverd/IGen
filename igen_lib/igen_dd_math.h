@@ -3,6 +3,7 @@
 #include <fenv.h>
 #include <math.h>
 #include <mpfr.h>
+#include <mpfi.h>
 #include "igen_dd_lib.h"
 
 //#define DEBUG
@@ -157,14 +158,97 @@ static dd_I _ia_log1p_dd(dd_I op) {
     return NAN_ddi.v;
 }
 
-static dd_I _ia_sin_dd(dd_I op) {
-    fprintf(stderr, "Error: Operation not supported.\n");
-    return NAN_ddi.v;
+static dd_I _ia_sin_dd(dd_I _op) {
+
+    /* Sqrt is monotonic. Apply function directly to lower and upper bounds. */
+    int rm = fegetround();
+    fesetround(FE_TONEAREST);
+    u_ddi res;
+
+    /* Transform to MPFR interval */
+    u_ddi x = { .v = _op };
+    mpfr_t xl, xu;
+    mpfr_init2(xl,    MPFR_MATH_HIGH_PRECISION);
+    mpfr_init2(xu,    MPFR_MATH_HIGH_PRECISION);
+    mpfr_set_d(xl, -x.lh, MPFR_RNDD);
+    mpfr_set_d(xu,  x.uh, MPFR_RNDU);
+    mpfr_add_d(xl, xl, -x.ll, MPFR_RNDD);
+    mpfr_add_d(xu, xu,  x.ul, MPFR_RNDU);
+
+    mpfi_t x_mpfi;
+    x_mpfi->right = *xu;
+    x_mpfi->left  = *xl;
+
+    /* Sqrt of lower bounds */
+    mpfi_sin(x_mpfi, x_mpfi);
+
+    *xl = x_mpfi->left;
+    *xu = x_mpfi->right;
+
+    /* Convert to double-double */
+    double r_lh, r_ll, r_uh, r_ul;
+    r_lh = mpfr_get_d(xl, MPFR_RNDD);
+    r_uh = mpfr_get_d(xu, MPFR_RNDU);
+    mpfr_add_d(xl, xl, -r_lh, MPFR_RNDD);
+    mpfr_add_d(xu, xu, -r_uh, MPFR_RNDD);
+    r_ll = mpfr_get_d(xl, MPFR_RNDD);
+    r_ul = mpfr_get_d(xu, MPFR_RNDU);
+
+    res.lh = -r_lh;
+    res.ll = -r_ll;
+    res.uh =  r_uh;
+    res.ul =  r_ul;
+
+    mpfr_clears(xl, xu, (mpfr_ptr) 0);
+
+    fesetround(rm);
+    return res.v;
 }
 
-static dd_I _ia_cos_dd(dd_I op) {
-    fprintf(stderr, "Error: Operation not supported.\n");
-    return NAN_ddi.v;
+static dd_I _ia_cos_dd(dd_I _op) {
+    /* Sqrt is monotonic. Apply function directly to lower and upper bounds. */
+    int rm = fegetround();
+    fesetround(FE_TONEAREST);
+    u_ddi res;
+
+    /* Transform to MPFR interval */
+    u_ddi x = { .v = _op };
+    mpfr_t xl, xu;
+    mpfr_init2(xl,    MPFR_MATH_HIGH_PRECISION);
+    mpfr_init2(xu,    MPFR_MATH_HIGH_PRECISION);
+    mpfr_set_d(xl, -x.lh, MPFR_RNDD);
+    mpfr_set_d(xu,  x.uh, MPFR_RNDU);
+    mpfr_add_d(xl, xl, -x.ll, MPFR_RNDD);
+    mpfr_add_d(xu, xu,  x.ul, MPFR_RNDU);
+
+    mpfi_t x_mpfi;
+    x_mpfi->right = *xu;
+    x_mpfi->left  = *xl;
+
+    /* Sqrt of lower bounds */
+    mpfi_cos(x_mpfi, x_mpfi);
+
+    *xl = x_mpfi->left;
+    *xu = x_mpfi->right;
+
+    /* Convert to double-double */
+    double r_lh, r_ll, r_uh, r_ul;
+    r_lh = mpfr_get_d(xl, MPFR_RNDD);
+    r_uh = mpfr_get_d(xu, MPFR_RNDU);
+    mpfr_add_d(xl, xl, -r_lh, MPFR_RNDD);
+    mpfr_add_d(xu, xu, -r_uh, MPFR_RNDD);
+    r_ll = mpfr_get_d(xl, MPFR_RNDD);
+    r_ul = mpfr_get_d(xu, MPFR_RNDU);
+
+    res.lh = -r_lh;
+    res.ll = -r_ll;
+    res.uh =  r_uh;
+    res.ul =  r_ul;
+
+    mpfr_clears(xl, xu, (mpfr_ptr) 0);
+
+    fesetround(rm);
+    return res.v;
 }
 
 static dd_I _ia_tan_dd(dd_I op) {
